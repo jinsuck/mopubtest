@@ -1,9 +1,14 @@
 package com.mopub.nativeads;
 
+import static android.view.View.VISIBLE;
+
+import java.util.WeakHashMap;
+
+import com.mopub.common.Preconditions;
+
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +17,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mopub.common.Preconditions;
-
-import java.util.WeakHashMap;
-
-import static android.view.View.VISIBLE;
-
 /**
  * Created by vineet.srivastava on 5/16/17.
  */
-//This file is provided by inmobi, don't change it (inmobi-ads:7.2.2)
+
 public class InMobiNativeAdRenderer implements MoPubAdRenderer<InMobiNativeCustomEvent.InMobiNativeAd> {
 
     /**
@@ -97,9 +96,9 @@ public class InMobiNativeAdRenderer implements MoPubAdRenderer<InMobiNativeCusto
         mainImageView.setVisibility(View.INVISIBLE);
 
         if (mViewBinder.extras.get(VIEW_BINDER_KEY_PRIMARY_AD_VIEW_LAYOUT) != null) {
-            final ViewGroup primaryAdLayout = mAdView.findViewById(mViewBinder.extras.get
+            final ViewGroup primaryAdLayout =  mAdView.findViewById(mViewBinder.extras.get
                     (VIEW_BINDER_KEY_PRIMARY_AD_VIEW_LAYOUT));
-            if (primaryAdLayout != null && primaryAdLayout instanceof RelativeLayout) {
+            if (primaryAdLayout != null  && parent instanceof RelativeLayout && primaryAdLayout instanceof RelativeLayout) {
                 primaryAdLayout.setLayoutParams(primaryViewLayoutParams);
             }
 
@@ -159,25 +158,21 @@ public class InMobiNativeAdRenderer implements MoPubAdRenderer<InMobiNativeCusto
         if (primaryAdViewLayout != null && mainImageView != null) {
             //removed child views and setting native ad primary View to avoid mismatch between native ad and primary
             // view which is caused, because android recycles the view
-
+            primaryAdViewLayout.removeAllViews();
             primaryAdViewLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     primaryAdViewLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    primaryAdViewLayout.removeAllViews();
                     View primaryAdView = inMobiNativeAd.getPrimaryAdView((ViewGroup) inMobiNativeViewHolder.getPrimaryAdViewLayout());
-                    if (primaryAdView != null) {
+                    if(primaryAdView != null){
                         primaryAdViewLayout.addView(primaryAdView);
                     }
                 }
             });
-            primaryAdViewLayout.removeAllViews();
-            View primaryAdView = inMobiNativeAd.getPrimaryAdView((ViewGroup) inMobiNativeViewHolder.getPrimaryAdViewLayout());
-            if (primaryAdView != null) {
-                primaryAdViewLayout.addView(primaryAdView);
-            }
+
             primaryAdViewLayout.setVisibility(VISIBLE);
-            mainImageView.setLayoutParams(primaryAdViewLayout.getLayoutParams());
+
+            mainImageView.setLayoutParams( primaryAdViewLayout.getLayoutParams() );
         }
     }
 
