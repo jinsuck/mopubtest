@@ -1,0 +1,24 @@
+# See also Scotch/.gitignore.
+
+# Generated log files.
+/logs
+
+# Generated Javadoc files.
+javadoc/
+
+# Available for private/local filfes.
+notes/
+
+# Android Studio: information about a module file. Recreated, as necessary.
+*.iml
+
+# "vim" backup file.
+*.swp
+
+# Apple macOS file: stores custom attributes of its containing folder.
+.DS_Store
+
+# TODO: Are the following still needed?
+/releaseBuild
+.idea
+.gradle
